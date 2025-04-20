@@ -89,7 +89,7 @@ const game = () => {
 
   return (
     <LinearGradient
-      colors={["#4c669f", "#3b5998", "#192f6a"]}
+      colors={["#FF6B8B", "#A65EEA", "#5E72EB"]}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={styles.container}>
@@ -151,18 +151,32 @@ const styles = StyleSheet.create({
   },
   board: {
     marginBottom: 30,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    padding: 5,
   },
   row: {
     flexDirection: "row",
   },
   square: {
-    width: 100,
-    height: 100,
-    borderWidth: 1,
-    borderColor: "#34495e",
+    width: 90,
+    height: 90,
+    borderWidth: 2,
+    borderColor: "rgba(240, 33, 178, 0.781)",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 5,
   },
   squareText: {
     fontSize: 40,
