@@ -1,6 +1,8 @@
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const game = () => {
   const [board, setBoard] = useState<string[]>(Array(9).fill(null));
@@ -84,60 +86,68 @@ const game = () => {
       </Pressable>
     );
   };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.status}>
-        {winner
-          ? winner === "draw"
-            ? "It's a draw!"
-            : `Winner: Player ${winner}`
-          : `Next player: ${isXNext ? "X" : "O"}`}
-      </Text>
-      <View style={styles.board}>
-        <View style={styles.row}>
-          {renderSquare(0)}
-          {renderSquare(1)}
-          {renderSquare(2)}
+    <LinearGradient
+      colors={["#4c669f", "#3b5998", "#192f6a"]}
+      style={styles.gradientContainer}
+    >
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.status}>
+          {winner
+            ? winner === "draw"
+              ? "It's a draw!"
+              : `Winner: Player ${winner}`
+            : `Next player: ${isXNext ? "X" : "O"}`}
+        </Text>
+        <View style={styles.board}>
+          <View style={styles.row}>
+            {renderSquare(0)}
+            {renderSquare(1)}
+            {renderSquare(2)}
+          </View>
+          <View style={styles.row}>
+            {renderSquare(3)}
+            {renderSquare(4)}
+            {renderSquare(5)}
+          </View>
+          <View style={styles.row}>
+            {renderSquare(6)}
+            {renderSquare(7)}
+            {renderSquare(8)}
+          </View>
         </View>
-        <View style={styles.row}>
-          {renderSquare(3)}
-          {renderSquare(4)}
-          {renderSquare(5)}
-        </View>
-        <View style={styles.row}>
-          {renderSquare(6)}
-          {renderSquare(7)}
-          {renderSquare(8)}
-        </View>
-      </View>
-      <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          pressed && styles.buttonPressed,
-        ]}
-        onPress={resetGame}
-      >
-        <Text style={styles.buttonText}>Reset Game</Text>
-      </Pressable>
-    </View>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={resetGame}
+        >
+          <Text style={styles.buttonText}>Reset Game</Text>
+        </Pressable>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 export default game;
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f5f5f5",
   },
   status: {
     marginBottom: 20,
     fontSize: 24,
     fontWeight: "bold",
-    color: "#2c3e50",
+    color: "white",
   },
   board: {
     marginBottom: 30,
@@ -152,7 +162,7 @@ const styles = StyleSheet.create({
     borderColor: "#34495e",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
   squareText: {
     fontSize: 40,
