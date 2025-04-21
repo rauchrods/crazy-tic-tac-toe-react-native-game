@@ -8,7 +8,8 @@ export default function RootLayout() {
       <StatusBar barStyle="dark-content" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="game" />
+        <Stack.Screen name="classicGame" />
+        <Stack.Screen name="crazyTicTacToeGame" />
       </Stack>
     </SafeAreaProvider>
   );

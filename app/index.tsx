@@ -1,47 +1,80 @@
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Switch, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Button from "./components/Button";
+import { useState } from "react";
+import gameRules from "@/constants/gameRules";
+import themes from "@/constants/themes";
 
 export default function Index() {
   const router = useRouter();
+
+  const [isCrazyMode, setIsCrazyMode] = useState<boolean>(true);
+
+  const currentRules = isCrazyMode
+    ? gameRules.crazyTicTacToeGame
+    : gameRules.classicGame;
+
+  const currentTheme = isCrazyMode ? themes.crazy : themes.classic;
+
   const navigateToGame = () => {
-    router.push("/game");
+    if (isCrazyMode) {
+      router.push("/crazyTicTacToeGame");
+    } else {
+      router.push("/classicGame");
+    }
   };
+
   return (
     <LinearGradient
-      colors={["#FF6B8B", "#A65EEA", "#5E72EB"]}
+      colors={currentTheme.gradient}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Crazy Tic Tac Toe</Text>
-        <View style={styles.rulesContainer}>
-          <Text style={styles.rulesTitle}>Game Rules:</Text>
-          <Text style={styles.rule}>
-            • Players take turns placing X or O on the board
-          </Text>
-          <Text style={styles.rule}>
-            • The first player to get 3 of their marks in a row wins
-          </Text>
-          <Text style={styles.rule}>
-            • Rows can be horizontal, vertical, or diagonal
-          </Text>
-          <Text style={styles.rule}>
-            • If all spaces are filled with no winner, it's a draw
-          </Text>
-          <Text style={styles.rule}>
-            • Crazy mode: Special power-ups appear randomly!
-          </Text>
+        <Text style={[styles.title, { color: currentTheme.title }]}>
+          {isCrazyMode ? "Crazy Tic Tac Toe" : "Classic Tic Tac Toe"}
+        </Text>
+        <View style={styles.toggleContainer}>
+          <Text style={styles.toggleLabel}>Classic Mode</Text>
+          <Switch
+            trackColor={{ false: currentTheme.track, true: currentTheme.track }}
+            thumbColor={currentTheme.thumb}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={(value) => setIsCrazyMode(value)}
+            value={isCrazyMode}
+          />
+          <Text style={styles.toggleLabel}>Crazy Mode</Text>
         </View>
-        <Pressable
-          style={({ pressed }) => [
-            styles.button,
-            pressed && styles.buttonPressed,
-          ]}
+        <View style={styles.rulesContainer}>
+          <Text style={[styles.rulesTitle, { color: currentTheme.title }]}>
+            {isCrazyMode ? "Crazy Mode Rules:" : "Classic Mode Rules:"}
+          </Text>
+          {currentRules.map((rule, index) => (
+            <Text style={styles.rule} key={index}>
+              <Text
+                style={[
+                  styles.ruleNumber,
+                  { color: currentTheme.ruleNumberColor },
+                ]}
+              >
+                {index + 1}
+              </Text>
+              . {rule}
+            </Text>
+          ))}
+        </View>
+
+        <Button
           onPress={navigateToGame}
+          customStyles={{
+            backgroundColor: currentTheme.buttonBg,
+          }}
         >
-          <Text style={styles.buttonText}>Start Game</Text>
-        </Pressable>
+          {isCrazyMode
+            ? "Start Crazy Tic Tac Toe"
+            : "Start Classic Tic Tac Toe"}
+        </Button>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -66,6 +99,22 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
+  toggleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    padding: 10,
+    borderRadius: 30,
+    width: "100%",
+  },
+  toggleLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#34495e",
+    marginHorizontal: 10,
+  },
   rulesContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     padding: 20,
@@ -89,28 +138,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#34495e",
   },
-  button: {
-    backgroundColor: "rgba(156, 39, 176, 0.9)",
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  buttonPressed: {
-    backgroundColor: "#7B1FA2",
-    transform: [{ scale: 0.97 }],
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
+  ruleNumber: {
     fontWeight: "bold",
-    letterSpacing: 0.5,
+    letterSpacing: 2,
   },
 });
