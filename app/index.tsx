@@ -1,16 +1,23 @@
 import { useRouter } from "expo-router";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Platform, StyleSheet, Switch, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "./components/Button";
 import { useState } from "react";
 import gameRules from "@/constants/gameRules";
 import themes from "@/constants/themes";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { setGameMode } from "../redux/gameSlice";
+
+const platform = Platform.OS;
 
 export default function Index() {
   const router = useRouter();
 
-  const [isCrazyMode, setIsCrazyMode] = useState<boolean>(true);
+  // const [isCrazyMode, setIsCrazyMode] = useState<boolean>(true);
+
+  const isCrazyMode = useAppSelector((state) => state.game.isCrazyMode);
+  const dispatch = useAppDispatch();
 
   const currentRules = isCrazyMode
     ? gameRules.crazyTicTacToeGame
@@ -41,7 +48,9 @@ export default function Index() {
             trackColor={{ false: currentTheme.track, true: currentTheme.track }}
             thumbColor={currentTheme.thumb}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={(value) => setIsCrazyMode(value)}
+            onValueChange={(value) => {
+              dispatch(setGameMode(value));
+            }}
             value={isCrazyMode}
           />
           <Text style={styles.toggleLabel}>Crazy Mode</Text>
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    padding: 10,
+    padding: platform === "ios" ? 10 : 2,
     borderRadius: 30,
     width: "100%",
   },

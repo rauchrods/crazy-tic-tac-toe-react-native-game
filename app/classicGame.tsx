@@ -4,12 +4,17 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
+import { useAppSelector } from "@/redux/hook";
+import themes from "@/constants/themes";
 
 const classicGame = () => {
+  const isCrazyMode = useAppSelector((state) => state.game.isCrazyMode);
   const [board, setBoard] = useState<string[]>(Array(9).fill(null));
   const [winner, setWinner] = useState<string | null>(null);
   const [isXNext, setIsXNext] = useState<boolean>(true);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+
+  const currentTheme = isCrazyMode ? themes.crazy : themes.classic;
 
   useEffect(() => {
     if (winner) {
@@ -140,7 +145,7 @@ const classicGame = () => {
 
   return (
     <LinearGradient
-      colors={["#FF6B8B", "#A65EEA", "#5E72EB"]}
+      colors={currentTheme.gradient}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={styles.container}>
