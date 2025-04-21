@@ -1,16 +1,39 @@
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Audio } from "expo-av";
 
 const game = () => {
   const [board, setBoard] = useState<string[]>(Array(9).fill(null));
   const [winner, setWinner] = useState<string | null>(null);
   const [isXNext, setIsXNext] = useState<boolean>(true);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   useEffect(() => {
     if (winner) {
+      const playEndGameSound = async () => {
+        try {
+          if (sound) {
+            await sound.unloadAsync();
+          }
+
+          const soundFile =
+            winner === "draw"
+              ? require("../assets/sounds/play.mp3")
+              : require("../assets/sounds/winSound.wav");
+
+          const { sound: newSound } = await Audio.Sound.createAsync(soundFile);
+          setSound(newSound);
+
+          await newSound.playAsync();
+        } catch (error) {
+          console.error("Error playing sound", error);
+        }
+      };
+
+      playEndGameSound();
       if (winner === "draw") {
         Alert.alert("Game Over", "It's a draw!", [
           { text: "Play Again", onPress: resetGame },
@@ -24,6 +47,32 @@ const game = () => {
       }
     }
   }, [winner]);
+
+  useEffect(() => {
+    return () => {
+      // Unload sound when component unmounts
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playMoveSound = async () => {
+    try {
+      if (sound) {
+        await sound.unloadAsync();
+      }
+
+      const soundFile = require("../assets/sounds/move.wav");
+
+      const { sound: newSound } = await Audio.Sound.createAsync(soundFile);
+      setSound(newSound);
+
+      await newSound.playAsync();
+    } catch (error) {
+      console.error("Error playing sound", error);
+    }
+  };
 
   const calculateWinner = (squares: string[]): string | null => {
     const lines = [
@@ -71,6 +120,8 @@ const game = () => {
     newBoard[index] = isXNext ? "X" : "O";
     setBoard(newBoard);
     setIsXNext(!isXNext);
+
+    playMoveSound();
 
     const gameWinner = calculateWinner(newBoard);
     console.log("gameWinner", gameWinner);
