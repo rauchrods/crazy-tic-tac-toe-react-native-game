@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Switch, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "./components/Button";
-import { useState } from "react";
+
 import gameRules from "@/constants/gameRules";
 import themes from "@/constants/themes";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
@@ -16,7 +16,9 @@ export default function Index() {
 
   // const [isCrazyMode, setIsCrazyMode] = useState<boolean>(true);
 
-  const isCrazyMode = useAppSelector((state) => state.game.isCrazyMode);
+  const isCrazyMode: boolean = useAppSelector(
+    (state) => state.game.isCrazyMode
+  );
   const dispatch = useAppDispatch();
 
   const currentRules = isCrazyMode

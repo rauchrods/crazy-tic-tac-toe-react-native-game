@@ -6,8 +6,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import { useAppSelector } from "@/redux/hook";
 import themes from "@/constants/themes";
+import Board from "./components/Board";
 
-const crazyTicTacToeGame = () => {
+const classicGame = () => {
   const isCrazyMode = useAppSelector((state) => state.game.isCrazyMode);
   const [board, setBoard] = useState<string[]>(Array(9).fill(null));
   const [winner, setWinner] = useState<string | null>(null);
@@ -135,14 +136,6 @@ const crazyTicTacToeGame = () => {
     }
   };
 
-  const renderSquare = (index: number) => {
-    return (
-      <Pressable style={styles.square} onPress={() => handlePress(index)}>
-        <Text style={styles.squareText}>{board[index]}</Text>
-      </Pressable>
-    );
-  };
-
   return (
     <LinearGradient
       colors={currentTheme.gradient}
@@ -156,23 +149,7 @@ const crazyTicTacToeGame = () => {
               : `Winner: Player ${winner}`
             : `Next player: ${isXNext ? "X" : "O"}`}
         </Text>
-        <View style={styles.board}>
-          <View style={styles.row}>
-            {renderSquare(0)}
-            {renderSquare(1)}
-            {renderSquare(2)}
-          </View>
-          <View style={styles.row}>
-            {renderSquare(3)}
-            {renderSquare(4)}
-            {renderSquare(5)}
-          </View>
-          <View style={styles.row}>
-            {renderSquare(6)}
-            {renderSquare(7)}
-            {renderSquare(8)}
-          </View>
-        </View>
+        <Board board={board} handlePress={handlePress} />
         <Pressable
           style={({ pressed }) => [
             styles.button,
@@ -187,7 +164,7 @@ const crazyTicTacToeGame = () => {
   );
 };
 
-export default crazyTicTacToeGame;
+export default classicGame;
 
 const styles = StyleSheet.create({
   gradientContainer: {
@@ -205,40 +182,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  board: {
-    marginBottom: 30,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: 5,
-  },
-  row: {
-    flexDirection: "row",
-  },
-  square: {
-    width: 90,
-    height: 90,
-    borderWidth: 2,
-    borderColor: "rgba(240, 33, 178, 0.781)",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.85)",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  squareText: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#3498db",
-  },
+
   button: {
     backgroundColor: "#e74c3c",
     paddingVertical: 12,
